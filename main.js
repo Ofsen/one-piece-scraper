@@ -5,7 +5,7 @@ const path = require("path");
 const stream = require("stream");
 const cron = require("cron");
 
-const BROWSER_PATH = "C:/Program Files/Google/Chrome/Application/chrome.exe";
+const BROWSER_PATH = process.env.BROWSER_PATH;
 
 async function getLastChapter() {
   const browser = await puppeteer.launch({
