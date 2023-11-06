@@ -5,18 +5,15 @@ const path = require("path");
 const stream = require("stream");
 const cron = require("cron");
 
-const BROWSER_PATH = process.env.BROWSER_PATH;
-
 async function getLastChapter() {
   const browser = await puppeteer.launch({
-    executablePath: BROWSER_PATH,
     headless: true,
   });
 
   // --- Getting chapter infos
 
   let page = await browser.newPage();
-  await page.goto("https://onepiecescan.fr/");
+  await page.goto("https://onepiecescan.fr/", {waitUntil: 'load'});
   await page.waitForSelector("li#ceo_latest_comics_widget-2");
   let html = await page.content();
   let $ = cheerio.load(html);
@@ -85,8 +82,8 @@ async function getLastChapter() {
 }
 
 const job = new cron.CronJob(
-  // "0 0 * * 0", // every week on sundays
-  "*/4 * * * *", // every week on sundays
+  "0 0 * * 0", // every week on sundays
+  // "*/4 * * * *", // every 4 minutes
   function () {
     getLastChapter();
   },
